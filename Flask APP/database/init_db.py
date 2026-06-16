@@ -42,8 +42,9 @@ def create_tables():
                     EMAIL VARCHAR(200) NOT NULL UNIQUE,
                     PASSWORDHASH VARCHAR(255) NOT NULL,
                     ROLE VARCHAR(20) NOT NULL CHECK (ROLE IN ('Employee','HR','Admin')),
-                    JOINDATE DATE NOT NULL
-            )
+                    JOINDATE DATE NOT NULL,
+                    LEAVES_BALANCE INT NOT NULL CHECK (LEAVES_BALANCE >= 0)
+                )
         END""",
         f"""IF OBJECT_ID('LeaveRequests', 'U') IS NULL
         BEGIN
@@ -67,7 +68,7 @@ def create_tables():
                 APPROVALID INT IDENTITY(1,1) PRIMARY KEY,
                 REQUESTID INT NOT NULL,
                 APPROVEDBY INT NOT NULL,
-                DECISION VARCHAR(20),
+                DECISION VARCHAR(20) NOT NULL DEFAULT 'Pending' CHECK (DECISION IN ('Pending', 'Approved', 'Rejected')),
                 COMMENTS VARCHAR(500),
                 APPROVALDATE DATETIME DEFAULT GETDATE(),
 
@@ -82,11 +83,13 @@ def create_tables():
 
     conn = get_connection()
     cursor = conn.cursor()
-    for query in queries:
-        cursor.execute(query)
-
-    conn.commit()
+    try:
+        for query in queries:
+            cursor.execute(query)
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
 
     cursor.close()
     conn.close()
-
