@@ -9,7 +9,7 @@ class Employee:
     JoinDate: date
     Leaves_Balance:int
     
-    def __init__(self, empid, name, email, hashedpassword, role, joindate, leaves_bal):
+    def __init__(self, empid:int|None, name:str, email:str, hashedpassword:str, role:str, joindate:date, leaves_bal:int):
         self.EmployeeID = empid
         self.Name = name
         self.Email = email

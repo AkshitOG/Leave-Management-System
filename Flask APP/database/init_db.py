@@ -56,7 +56,7 @@ def create_tables():
                 ENDDATE DATE NOT NULL,
                 REASON VARCHAR(500),
                 STATUS VARCHAR(50) DEFAULT 'Pending' CHECK (STATUS IN ('Pending','Approved','Rejected','Cancelled')),
-                CREATEDATE DATETIME DEFAULT GETDATE(),
+                CREATIONDATE DATETIME DEFAULT GETDATE(),
 
                 FOREIGN KEY (EMPLOYEEID)
                     REFERENCES Employees(EMPLOYEEID)

@@ -1,7 +1,9 @@
 from employee import Employee
+from leave_request import LeaveRequest
 from datetime import date
 
 class Approval:
+    requestid:int
     ApprovalID:int
     RequestedBy:Employee
     ApprovedBy:Employee
@@ -9,7 +11,7 @@ class Approval:
     Comments:str
     ApprovalDate:date
 
-    def __init__(self, approvalid, requestby, approveby, decision, comment, approvedate):
+    def __init__(self, approvalid:int, requestby:Employee, approveby:Employee, decision:str, comment:str, approvedate:date):
         self.ApprovalID = approvalid
         self.RequestedBy = requestby
         self.ApprovedBy = approveby
