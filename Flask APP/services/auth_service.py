@@ -26,14 +26,14 @@ class AuthService:
         )
     
     @staticmethod
-    def login(employeeid:int, passwordhashed:str):
+    def login(employeeid:int, password:str):
 
         employee = AuthService.get_user_by_id(empid=employeeid)
 
         if employee is None:
             return None
         
-        if not check_password_hash(employee.Password_hash, passwordhashed):
+        if not check_password_hash(employee.Password_hash, password):
             return None
         
         return employee
