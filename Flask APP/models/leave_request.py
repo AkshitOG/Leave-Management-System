@@ -1,21 +1,21 @@
 from datetime import date
 
 class LeaveRequest:
-    requestid:int
-    employeeid:int
-    leavetype:str
-    startdate:date
-    enddate:date
+    request_id:int
+    employee_id:int
+    leave_type:str
+    start_date:date
+    end_date:date
     reason:str
     status:str
-    creationdate:date
+    creation_date:date
 
-    def __init__(self, reqid:int, empid:int, leave_type:str, startdate:date, enddate:date, reason:str, status:str, createdate:date):
-        self.requestid = reqid
-        self.employeeid = empid
-        self.leavetype = leave_type
-        self.startdate = startdate
-        self.enddate = enddate
+    def __init__(self, reqid:int, empid:int, leave_type:str, startdate:date, enddate:date, reason:str, status:str | None = None, createdate:date | None = None):
+        self.request_id = reqid
+        self.employee_id = empid
+        self.leave_type = leave_type
+        self.start_date = startdate
+        self.end_date = enddate
         self.reason = reason
-        self.status = status
-        self.creationdate = createdate
+        self.status = status if status is not None else "PENDING"
+        self.creation_date = createdate if createdate is not None else date.today()

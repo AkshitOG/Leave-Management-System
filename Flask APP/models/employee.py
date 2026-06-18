@@ -1,5 +1,7 @@
 from datetime import date
+from dataclasses import dataclass
 
+@dataclass
 class Employee:
     EmployeeID:int | None
     Name:str

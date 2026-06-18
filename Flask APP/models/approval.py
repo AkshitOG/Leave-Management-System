@@ -1,7 +1,9 @@
 from employee import Employee
 from leave_request import LeaveRequest
 from datetime import date
+from dataclasses import dataclass
 
+@dataclass
 class Approval:
     requestid:int
     ApprovalID:int

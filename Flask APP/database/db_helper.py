@@ -1,14 +1,16 @@
 from connection import get_connection
 
-def execute_query(query:str, params:bool = None):
+def execute_query(query:str, params:list = None):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(query, params or [])
-    cursor.commit()
+    rows_affected = cursor.rowcount
+    conn.commit()
 
     cursor.close()
     conn.close()
+    return rows_affected
 
 def fetchone(query, params = None):
     conn = get_connection()
