@@ -28,7 +28,7 @@ def login():
             return redirect(next_url)
         
         flash("Login Successfull")
-        return redirect(url_for("employee.dashboard"))
+        return redirect("/")
 
     return render_template("login.html")
 

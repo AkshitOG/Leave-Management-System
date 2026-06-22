@@ -10,6 +10,7 @@ class Employee:
     Role:str
     JoinDate: date
     Leaves_Balance:int
+    default_leave_bal:int
     
     def __init__(self, empid:int|None, name:str, email:str, hashedpassword:str, role:str, joindate:date, leaves_bal:int):
         self.EmployeeID = empid
@@ -19,5 +20,3 @@ class Employee:
         self.Role = role
         self.JoinDate = joindate
         self.Leaves_Balance = leaves_bal
-    
-    

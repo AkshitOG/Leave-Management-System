@@ -52,3 +52,14 @@ class LeaveService:
             return True
         
         return False
+    
+    @staticmethod
+    def get_pending(role:str):
+        query = """SELECT *
+        FROM LeaveRequests
+        WHERE STATUS = ?
+        """
+
+        pending_leaves_rows = fetchall(query, "PENDING")
+
+        return [LeaveRequest.from_row(  pending_leave_req) for pending_leave_req in pending_leaves_rows]

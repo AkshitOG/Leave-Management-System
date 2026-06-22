@@ -6,7 +6,7 @@ from models.leave_request import LeaveRequest
 leave_bp = Blueprint(
     "leave",
     __name__,
-    url_prefix="/leave"
+    url_prefix="/leaves"
 )
 
 @login_required
