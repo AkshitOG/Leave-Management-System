@@ -1,14 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title%}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Leave Management System{% endblock %}</title>
+  <!-- Flask: url_for('static', filename='style.css')   |   ASP.NET: ~/css/style.css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <div class="content">
-        {% block content %}{% endblock content %}
-    </div>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">LM</span>
+        <span class="brand-name">LeaveMS</span>
+      </div>
+      <nav class="nav">
+        {% block nav %}
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">Apply Leave</a>
+        <a href="#" class="nav-item">Leave History</a>
+        <a href="#" class="nav-item">Manage Requests</a>
+        <a href="#" class="nav-item">Profile</a>
+        {% endblock %}
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="nav-item">Logout</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+          <p class="page-subtitle">{% block page_subtitle %}{% endblock %}</p>
+        </div>
+        <div class="topbar-actions">
+          {% block topbar_actions %}{% endblock %}
+          <div class="user-chip">
+            <div class="avatar">{% block user_initials %}U{% endblock %}</div>
+            <div>
+              <div class="user-name">{% block user_name %}User Name{% endblock %}</div>
+              <div class="user-role">{% block user_role %}Employee{% endblock %}</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {% block flash %}{% endblock %}
+
+      <section class="content">
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+  </div>
 </body>
 </html>
