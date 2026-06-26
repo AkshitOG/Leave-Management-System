@@ -1,5 +1,6 @@
 from database.db_helper import *
 from models.leave_request import LeaveRequest
+from datetime import date
 
 class LeaveService:
 
@@ -54,12 +55,48 @@ class LeaveService:
         return False
     
     @staticmethod
-    def get_pending(role:str):
-        query = """SELECT *
-        FROM LeaveRequests
-        WHERE STATUS = ?
-        """
+    def get_pending(limit:int | None = None):
+        if limit is not None:
+            query = """SELECT TOP(?) *
+            FROM LeaveRequests
+            WHERE STATUS = ?
+            ORDER BY CREATIONDATE DESC
+            """
+            pending_leaves_rows = fetchall(query, limit, "PENDING")
+        else:
+            query = """SELECT *
+            FROM LeaveRequests
+            WHERE STATUS = ?
+            ORDER BY CREATIONDATE DESC
+            """
+            pending_leaves_rows = fetchall(query, "PENDING")
 
-        pending_leaves_rows = fetchall(query, "PENDING")
+        return [LeaveRequest.from_row(pending_leave_req) for pending_leave_req in pending_leaves_rows]
+    
+    @staticmethod
+    def approve_leave(request_id:int, employee_id:int, approved_by:int, comments:str, ):
+        queries = ["""UPDATE LeaveRequests
+        SET STATUS = 'APPROVED'
+        WHERE REQUESTID = ?""",
 
-        return [LeaveRequest.from_row(  pending_leave_req) for pending_leave_req in pending_leaves_rows]
+        """UPDATE Employees
+        SET LEAVES_BALANCE = LEAVES_BALANCE - ?
+        WHERE EMPLOYEEID = ?""",
+        
+        """INSERT INTO Approvals
+        (REQUESTID,
+        APPROVEDBY,
+        COMMENTS,
+        APPROVALDATE)
+        VALUES (?,?,?,?)"""]
+
+        dates = fetchone("""SELECT STARTDATE, ENDDATE
+                              FROM LeaveRequests
+                              WHERE REQUESTID = ?""", request_id)
+        start_date = dates.STARTDATE
+        end_date = dates.ENDDATE
+        total_days = (end_date - start_date).days + 1
+
+        execute_query(queries[0], request_id)
+        execute_query(queries[1], [total_days, employee_id])
+        execute_query(queries[2], [request_id, approved_by, comments, date.today()])
