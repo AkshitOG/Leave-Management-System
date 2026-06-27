@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from decorators.login_required import login_required, role_req
+from decorators.login_required import login_required
+from decorators.role_required import role_req
 from services.admin_service import AdminService
 
 admin_bp = Blueprint(

@@ -1,3 +1,5 @@
 secrets/
 venv/
 Flask App/.env
+
+__pycache__

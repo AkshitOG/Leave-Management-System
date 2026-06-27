@@ -41,7 +41,7 @@ def create_tables():
                     NAME VARCHAR(100) NOT NULL,
                     EMAIL VARCHAR(200) NOT NULL UNIQUE,
                     PASSWORDHASH VARCHAR(255) NOT NULL,
-                    ROLE VARCHAR(20) NOT NULL CHECK (ROLE IN ('Employee','HR','Admin')),
+                    ROLE VARCHAR(20) NOT NULL CHECK (ROLE IN ('EMPLOYEE','HR','ADMIN')),
                     JOINDATE DATE NOT NULL,
                     LEAVES_BALANCE INT NOT NULL CHECK (LEAVES_BALANCE >= 0)
                 )

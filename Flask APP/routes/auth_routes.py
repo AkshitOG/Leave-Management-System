@@ -22,6 +22,7 @@ def login():
         session["employee_id"] = employee.EmployeeID
         session["name"] = employee.Name
         session["role"] = employee.Role
+        session["email"] = employee.Email
         
         next_url = request.args.get("next")
         if next_url:

@@ -1,6 +1,6 @@
 from database.db_helper import *
 from models.leave_request import LeaveRequest
-from datetime import date
+from datetime import date 
 
 class LeaveService:
 
@@ -75,6 +75,10 @@ class LeaveService:
     
     @staticmethod
     def approve_leave(request_id:int, employee_id:int, approved_by:int, comments:str, ):
+        leave = LeaveService.leave_details(request_id)
+        if leave.status != "Pending":
+            return False
+        
         queries = ["""UPDATE LeaveRequests
         SET STATUS = 'APPROVED'
         WHERE REQUESTID = ?""",
@@ -86,13 +90,17 @@ class LeaveService:
         """INSERT INTO Approvals
         (REQUESTID,
         APPROVEDBY,
+        DECISION,
         COMMENTS,
         APPROVALDATE)
-        VALUES (?,?,?,?)"""]
+        VALUES (?,?,'Approved',?,?)"""]
 
         dates = fetchone("""SELECT STARTDATE, ENDDATE
                               FROM LeaveRequests
                               WHERE REQUESTID = ?""", request_id)
+        if dates is None:
+            return False
+        
         start_date = dates.STARTDATE
         end_date = dates.ENDDATE
         total_days = (end_date - start_date).days + 1
@@ -100,3 +108,28 @@ class LeaveService:
         execute_query(queries[0], request_id)
         execute_query(queries[1], [total_days, employee_id])
         execute_query(queries[2], [request_id, approved_by, comments, date.today()])
+        return True
+
+    @staticmethod
+    def reject_leave(request_id:int, approved_by:int, comments:str):
+        leave = LeaveService.leave_details(request_id)
+        if leave.status != "Pending":
+            return False
+        
+        queries = ["""UPDATE LeaveRequests
+        SET STATUS = 'REJECTED'
+        WHERE REQUESTID = ?""",
+        
+        """INSERT INTO Approvals
+        (REQUESTID,
+        APPROVEDBY,
+        DECISION,
+        COMMENTS,
+        APPROVALDATE)
+        VALUES (?,?,'Rejected',?,?)"""]
+
+        execute_query(queries[0], request_id)
+        execute_query(queries[1], [request_id, approved_by, comments, date.today()])
+        return True
+    
+    
