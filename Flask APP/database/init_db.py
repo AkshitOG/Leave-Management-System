@@ -1,7 +1,7 @@
 import pyodbc
 import os
 from dotenv import load_dotenv
-from connection import get_connection
+from database.connection import get_connection
 
 load_dotenv()
 

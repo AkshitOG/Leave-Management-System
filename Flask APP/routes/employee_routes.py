@@ -7,9 +7,9 @@ emp_bp = Blueprint(
     __name__
 )
 
-@login_required
 @emp_bp.route("/dashboard")
+@login_required
 def dashboard():
     
     stats = DashboardService.get_leave_stats(session.get("employee_id"))
-    return render_template("employee_dashboarddashboard.html")
+    return render_template("employee_dashboard.html", stats=stats)

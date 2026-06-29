@@ -10,7 +10,7 @@ class LeaveRequest:
     status:str
     creation_date:date
 
-    def __init__(self, reqid:int|None, empid:int, leave_type:str, startdate:date, enddate:date, reason:str, status:str | None = None, createdate:date | None = None):
+    def __init__(self, empid:int, leave_type:str, startdate:date, enddate:date, reason:str, reqid:int|None = None, status:str | None = None, createdate:date | None = None):
         self.request_id = reqid
         self.employee_id = empid
         self.leave_type = leave_type
@@ -34,7 +34,7 @@ class LeaveRequest:
             )
 
     def is_pending(self):
-        return self.status == "PENDING"
+        return self.status == "Pending"
     
     def can_cancel(self):
         return self.is_pending()

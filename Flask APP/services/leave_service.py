@@ -10,10 +10,10 @@ class LeaveService:
         VALUES (?,?, ?, ?, ?)"""
 
         rows = execute_query(query,
-                      [leaverequestobject.employeeid,
-                        leaverequestobject.leavetype,
-                        leaverequestobject.startdate,
-                        leaverequestobject.enddate,
+                      [leaverequestobject.employee_id,
+                        leaverequestobject.leave_type,
+                        leaverequestobject.start_date,
+                        leaverequestobject.end_date,
                         leaverequestobject.reason]
                     )
         
@@ -49,7 +49,7 @@ class LeaveService:
             SET STATUS = ?
             WHERE REQUESTID = ?"""
 
-            execute_query(query, ["CANCELLED", request_id])
+            execute_query(query, ["Cancelled", request_id])
             return True
         
         return False

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Apply Leave
+{% endblock %}
+
+
+{% block nav %}
+
+<a href="{{ url_for('employee.dashboard') }}"
+   class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('leave.leavepage') }}"
+   class="nav-item active">
+    Apply Leave
+</a>
+
+<a href="{{ url_for('leave.history_page') }}"
+   class="nav-item">
+    Leave History
+</a>
+
+{% endblock %}
+
+
+{% block page_title %}
+Apply for Leave
+{% endblock %}
+
+
+{% block page_subtitle %}
+Submit a new leave request.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card form-card">
+
+    <h3 class="card-title">
+
+        New Leave Request
+
+    </h3>
+
+    <form method="POST">
+
+        <div class="form-group">
+
+            <label class="form-label">
+
+                Leave Type
+
+            </label>
+
+            <select
+                class="form-control"
+                name="leave_type"
+                required>
+
+                <option value="">Select Leave Type</option>
+
+                <option value="Casual Leave">
+                    Casual Leave
+                </option>
+
+                <option value="Sick Leave">
+                    Sick Leave
+                </option>
+
+                <option value="Earned Leave">
+                    Earned Leave
+                </option>
+
+                <option value="Emergency Leave">
+                    Emergency Leave
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    Start Date
+
+                </label>
+
+                <input
+                    type="date"
+                    name="start_date"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    End Date
+
+                </label>
+
+                <input
+                    type="date"
+                    name="end_date"
+                    class="form-control"
+                    required>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+
+                Reason
+
+            </label>
+
+            <textarea
+                name="reason"
+                class="form-control"
+                placeholder="Reason for leave..."
+                required></textarea>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Submit Request
+
+            </button>
+
+            <a
+                href="{{ url_for('employee.dashboard') }}"
+                class="btn btn-outline">
+
+                Cancel
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

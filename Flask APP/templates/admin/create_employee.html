@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Employee
+{% endblock %}
+
+{% block nav %}
+
+<a href="{{ url_for('admin.dashboard') }}" class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('admin.employees') }}" class="nav-item">
+    Employees
+</a>
+
+<a href="{{ url_for('admin.create_employee') }}" class="nav-item active">
+    Create Employee
+</a>
+
+<a href="{{ url_for('admin.balances') }}" class="nav-item">
+    Leave Balances
+</a>
+
+{% endblock %}
+
+{% block page_title %}
+Create Employee
+{% endblock %}
+
+{% block page_subtitle %}
+Add a new employee to the Leave Management System.
+{% endblock %}
+
+{% block content %}
+
+<div class="card form-card">
+
+<form method="POST">
+
+<div class="form-group">
+
+<label class="form-label">
+
+Name
+
+</label>
+
+<input
+type="text"
+name="name"
+class="form-control"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+
+Email
+
+</label>
+
+<input
+type="email"
+name="email"
+class="form-control"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+
+Password
+
+</label>
+
+<input
+type="password"
+name="password"
+class="form-control"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+
+Role
+
+</label>
+
+<select
+name="role"
+class="form-control">
+
+<option value="EMPLOYEE">
+
+Employee
+
+</option>
+
+<option value="HR">
+
+HR
+
+</option>
+
+<option value="ADMIN">
+
+Admin
+
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label class="form-label">
+
+Leave Balance
+
+</label>
+
+<input
+type="number"
+name="leave_balance"
+class="form-control"
+value="20"
+required>
+
+</div>
+
+<div class="actions">
+
+<button
+type="submit"
+class="btn btn-primary">
+
+Create Employee
+
+</button>
+
+<a
+href="{{ url_for('admin.employees') }}"
+class="btn btn-outline">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+{% endblock %}

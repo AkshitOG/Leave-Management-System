@@ -5,12 +5,12 @@ from werkzeug.security import check_password_hash
 class AuthService:
 
     @staticmethod
-    def get_user_by_id(empid):
+    def get_user_by_id(email:str):
         query = """SELECT *
         FROM Employees
-        WHERE EMPLOYEEID = ?"""
+        WHERE EMAIL = ?"""
 
-        row = fetchone(query, empid)
+        row = fetchone(query, email)
         
         if row is None:
             return None
@@ -26,9 +26,9 @@ class AuthService:
         )
     
     @staticmethod
-    def login(employeeid:int, password:str):
+    def login(email:int, password:str):
 
-        employee = AuthService.get_user_by_id(empid=employeeid)
+        employee = AuthService.get_user_by_id(email=email)
 
         if employee is None:
             return None

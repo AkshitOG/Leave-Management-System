@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+Employees
+{% endblock %}
+
+{% block nav %}
+
+<a href="{{ url_for('admin.dashboard') }}" class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('admin.employees') }}" class="nav-item active">
+    Employees
+</a>
+
+<a href="{{ url_for('admin.create_employee') }}" class="nav-item">
+    Create Employee
+</a>
+
+<a href="{{ url_for('admin.balances') }}" class="nav-item">
+    Leave Balances
+</a>
+
+{% endblock %}
+
+{% block page_title %}
+Employees
+{% endblock %}
+
+{% block page_subtitle %}
+Manage all employees in the system.
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="section-header">
+
+        <h2 class="section-title">
+            Employee List
+        </h2>
+
+        <a href="{{ url_for('admin.create_employee') }}"
+           class="btn btn-primary">
+
+            + Add Employee
+
+        </a>
+
+    </div>
+
+    {% if employees %}
+
+    <table class="table">
+
+        <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Leave Balance</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for employee in employees %}
+
+        <tr>
+
+            <td>{{ employee.EMPLOYEEID }}</td>
+
+            <td>{{ employee.NAME }}</td>
+
+            <td>{{ employee.EMAIL }}</td>
+
+            <td>{{ employee.ROLE }}</td>
+
+            <td>{{ employee.LEAVESBALANCE }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <h3>No Employees Found</h3>
+
+        <p>Create your first employee to get started.</p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

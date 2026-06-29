@@ -9,8 +9,8 @@ leave_bp = Blueprint(
     url_prefix="/leaves"
 )
 
-@login_required
 @leave_bp.route("/new", methods=["GET", "POST"])
+@login_required
 def leavepage():
     if request.method == "POST":
         employee_id = session.get("employee_id")
@@ -31,8 +31,8 @@ def leavepage():
 
     return render_template("leaves_page.html")
 
-@login_required
 @leave_bp.route("/", methods=["GET"])
+@login_required
 def history_page():
     employee_id = session.get("employee_id")
 
@@ -40,8 +40,8 @@ def history_page():
 
     return render_template("leave_history.html", leaves=leaves)
 
-@login_required
 @leave_bp.route("/<int:request_id>")
+@login_required
 def request_details(request_id:int):
     current_employee_id = session.get("employee_id")
     leave = LeaveService.leave_details(request_id=request_id)
@@ -52,8 +52,8 @@ def request_details(request_id:int):
     
     return render_template("request_details.html", leave_details=leave)
 
-@login_required
 @leave_bp.route("/<int:request_id>/cancel", methods=["GET","POST"])
+@login_required
 def cancel_leave(request_id:int):
     leave = LeaveService.leave_details(request_id=request_id)
     current_employee_id = session.get("employee_id")
@@ -70,4 +70,4 @@ def cancel_leave(request_id:int):
             flash("Cancelled Successfully", "success")
             return redirect(url_for("leave.request_details", request_id = request_id))
         
-    return render_template("cancellation.html")
+    return render_template("cancellation.html", leave=leave)

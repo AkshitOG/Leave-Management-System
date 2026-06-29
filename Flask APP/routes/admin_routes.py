@@ -9,22 +9,22 @@ admin_bp = Blueprint(
     url_prefix="/admin"
 )
 
+@admin_bp.route("/dashboard")
 @login_required
 @role_req("ADMIN")
-@admin_bp.route("/dashboard")
 def dashboard():
 
     stats = AdminService.get_dashboard_stats()
 
     return render_template(
-        "admin/dashboard.html",
+        "admin/admin_dashboard.html",
         stats=stats
     )
 
 
+@admin_bp.route("/employees")
 @login_required
 @role_req("ADMIN")
-@admin_bp.route("/employees")
 def employees():
 
     employees = AdminService.get_all_employees()
@@ -35,9 +35,10 @@ def employees():
     )
 
 
+
+@admin_bp.route("/create-employee", methods=["GET", "POST"])
 @login_required
 @role_req("ADMIN")
-@admin_bp.route("/create-employee", methods=["GET", "POST"])
 def create_employee():
 
     if request.method == "POST":
@@ -61,9 +62,9 @@ def create_employee():
     return render_template("admin/create_employee.html")
 
 
+@admin_bp.route("/balances")
 @login_required
 @role_req("ADMIN")
-@admin_bp.route("/balances")
 def balances():
 
     employees = AdminService.get_all_employees()

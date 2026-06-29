@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}
+Employee Dashboard
+{% endblock %}
+
+{% block nav %}
+
+<a href="{{ url_for('employee.dashboard') }}" class="nav-item active">
+    Dashboard
+</a>
+
+<a href="{{ url_for('leave.leavepage') }}" class="nav-item">
+    Apply Leave
+</a>
+
+<a href="{{ url_for('leave.history_page') }}" class="nav-item">
+    Leave History
+</a>
+
+{% endblock %}
+
+{% block page_title %}
+Employee Dashboard
+{% endblock %}
+
+{% block page_subtitle %}
+Welcome back! Here's a summary of your leave activity.
+{% endblock %}
+
+{% block user_initials %}
+{{ session.get("name", "U")[0] }}
+{% endblock %}
+
+{% block user_name %}
+{{ session.get("name") }}
+{% endblock %}
+
+{% block user_role %}
+Employee
+{% endblock %}
+
+{% block content %}
+
+<div class="grid grid-4">
+
+<div class="card">
+    <h3 class="card-title">Leave Balance</h3>
+    <h2>{{ stats.leave_balance }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Pending</h3>
+    <h2>{{ stats.Pending }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Approved</h3>
+    <h2>{{ stats.Approved }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Rejected</h3>
+    <h2>{{ stats.Rejected }}</h2>
+</div>
+
+</div>
+
+<br>
+
+<div class="grid grid-3">
+
+<div class="card">
+
+    <h3 class="card-title">
+
+        Apply for Leave
+
+    </h3>
+
+    <p>
+
+        Submit a new leave request.
+
+    </p>
+
+    <a href="{{ url_for('leave.leavepage') }}"
+       class="btn btn-primary">
+
+        Apply Leave
+
+    </a>
+
+</div>
+
+<div class="card">
+
+    <h3 class="card-title">
+
+        Leave History
+
+    </h3>
+
+    <p>
+
+        View all your previous requests.
+
+    </p>
+
+    <a href="{{ url_for('leave.history_page') }}"
+       class="btn btn-outline">
+
+        View History
+
+    </a>
+
+</div>
+
+<div class="card">
+
+    <h3 class="card-title">
+
+        Quick Info
+
+    </h3>
+
+    <p>
+
+        You can cancel only pending leave requests.
+
+    </p>
+
+</div>
+
+</div>
+
+{% endblock %}

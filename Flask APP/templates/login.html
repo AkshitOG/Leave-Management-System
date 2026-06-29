@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+
+            <div class="brand-mark"
+                 style="margin:auto;">
+
+                LM
+
+            </div>
+
+            <h2>
+
+                Leave Management System
+
+            </h2>
+
+            <p>
+
+                Login to continue
+
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    EMAIL
+
+                </label>
+
+                <input
+                    class="form-control"
+                    type="email"
+                    name="email"
+                    required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    Password
+
+                </label>
+
+                <input
+                    class="form-control"
+                    type="password"
+                    name="password"
+                    required>
+
+            </div>
+
+            <button
+                class="btn btn-primary auth-submit"
+                type="submit">
+
+                Login
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="toast-container">
+
+{% with messages=get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+{% for category,message in messages %}
+
+<div class="toast toast-{{category}}">
+
+{{message}}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+
+<script>
+
+document.querySelectorAll(".toast").forEach((toast)=>{
+
+setTimeout(()=>{
+
+toast.classList.add("toast-hide");
+
+setTimeout(()=>{
+
+toast.remove();
+
+},300);
+
+},4000);
+
+});
+
+</script>
+
+</body>
+
+</html>

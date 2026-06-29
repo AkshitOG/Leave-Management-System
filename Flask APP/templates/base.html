@@ -1,59 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Leave Management System{% endblock %}</title>
-  <!-- Flask: url_for('static', filename='style.css')   |   ASP.NET: ~/css/style.css -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Leave Management System{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-  <div class="layout">
-    <!-- Sidebar -->
+
+<div class="layout">
+
     <aside class="sidebar">
-      <div class="brand">
-        <span class="brand-mark">LM</span>
-        <span class="brand-name">LeaveMS</span>
-      </div>
-      <nav class="nav">
-        {% block nav %}
-        <a href="#" class="nav-item active">Dashboard</a>
-        <a href="#" class="nav-item">Apply Leave</a>
-        <a href="#" class="nav-item">Leave History</a>
-        <a href="#" class="nav-item">Manage Requests</a>
-        <a href="#" class="nav-item">Profile</a>
-        {% endblock %}
-      </nav>
-      <div class="sidebar-footer">
-        <a href="#" class="nav-item">Logout</a>
-      </div>
+
+        <div class="brand">
+            <span class="brand-mark">LM</span>
+            <span class="brand-name">LeaveMS</span>
+        </div>
+
+        <nav class="nav">
+            {% block nav %}
+            {% endblock %}
+        </nav>
+
+        <div class="sidebar-footer">
+            <form method="POST"
+                  action="{{ url_for('auth.logout') }}">
+                <button class="btn btn-outline logout-btn">
+                    Logout
+                </button>
+            </form>
+        </div>
+
     </aside>
 
-    <!-- Main -->
+
     <main class="main">
-      <header class="topbar">
-        <div>
-          <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
-          <p class="page-subtitle">{% block page_subtitle %}{% endblock %}</p>
-        </div>
-        <div class="topbar-actions">
-          {% block topbar_actions %}{% endblock %}
-          <div class="user-chip">
-            <div class="avatar">{% block user_initials %}U{% endblock %}</div>
+
+        <header class="topbar">
+
             <div>
-              <div class="user-name">{% block user_name %}User Name{% endblock %}</div>
-              <div class="user-role">{% block user_role %}Employee{% endblock %}</div>
+                <h1 class="page-title">
+                    {% block page_title %}{% endblock %}
+                </h1>
+
+                <p class="page-subtitle">
+                    {% block page_subtitle %}{% endblock %}
+                </p>
             </div>
-          </div>
-        </div>
-      </header>
 
-      {% block flash %}{% endblock %}
+            <div class="topbar-actions">
 
-      <section class="content">
-        {% block content %}{% endblock %}
-      </section>
+                {% block topbar_actions %}{% endblock %}
+
+                <div class="user-chip">
+
+                    <div class="avatar">
+                        {{ session.get("name","U")[0] }}
+                    </div>
+
+                    <div>
+
+                        <div class="user-name">
+                            {{ session.get("name","User") }}
+                        </div>
+
+                        <div class="user-role">
+                            {{ session.get("role","Guest") }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
     </main>
-  </div>
+
+</div>
+
+
+<!-- Flash Toasts -->
+
+<div class="toast-container">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+{% for category, message in messages %}
+
+<div class="toast toast-{{ category }}">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+
+
+<script>
+
+const toasts = document.querySelectorAll(".toast");
+
+toasts.forEach((toast)=>{
+
+    setTimeout(()=>{
+
+        toast.classList.add("toast-hide");
+
+        setTimeout(()=>{
+
+            toast.remove();
+
+        },300);
+
+    },4000);
+
+});
+
+</script>
+
+{% block scripts %}
+
+{% endblock %}
+
 </body>
 </html>

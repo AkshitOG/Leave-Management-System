@@ -5,7 +5,7 @@ class DashboardService:
     @staticmethod
     def get_leave_stats(employee_id:int):
         query = """SELECT STATUS,COUNT(*)
-        FROM LeaveRequest
+        FROM LeaveRequests
         WHERE EMPLOYEEID = ?
         GROUP BY STATUS"""
 

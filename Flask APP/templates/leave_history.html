@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}
+Leave History
+{% endblock %}
+
+
+{% block nav %}
+
+<a href="{{ url_for('employee.dashboard') }}"
+   class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('leave.leavepage') }}"
+   class="nav-item">
+    Apply Leave
+</a>
+
+<a href="{{ url_for('leave.history_page') }}"
+   class="nav-item active">
+    Leave History
+</a>
+
+{% endblock %}
+
+
+{% block page_title %}
+Leave History
+{% endblock %}
+
+
+{% block page_subtitle %}
+View all of your leave requests.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+
+    <div class="section-header">
+
+        <h3 class="card-title">
+
+            Previous Leave Requests
+
+        </h3>
+
+        <a href="{{ url_for('leave.leavepage') }}"
+           class="btn btn-primary">
+
+            + New Leave
+
+        </a>
+
+    </div>
+
+
+    {% if leaves %}
+
+    <table class="table">
+
+        <thead>
+
+        <tr>
+
+            <th>ID</th>
+
+            <th>Leave Type</th>
+
+            <th>Start Date</th>
+
+            <th>End Date</th>
+
+            <th>Status</th>
+
+            <th></th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for leave in leaves %}
+
+        <tr>
+
+            <td>
+
+                #{{ leave.request_id }}
+
+            </td>
+
+            <td>
+
+                {{ leave.leave_type }}
+
+            </td>
+
+            <td>
+
+                {{ leave.start_date }}
+
+            </td>
+
+            <td>
+
+                {{ leave.end_date }}
+
+            </td>
+
+            <td>
+
+                {% if leave.status == "APPROVED" %}
+
+                    <span class="badge badge-success">
+
+                        Approved
+
+                    </span>
+
+                {% elif leave.status == "PENDING" %}
+
+                    <span class="badge badge-warning">
+
+                        Pending
+
+                    </span>
+
+                {% elif leave.status == "REJECTED" %}
+
+                    <span class="badge badge-danger">
+
+                        Rejected
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge">
+
+                        {{ leave.status }}
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <a
+
+                    href="{{ url_for('leave.request_details',
+                    request_id=leave.request_id) }}"
+
+                    class="btn btn-outline">
+
+                    View
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <h3>
+
+            No Leave Requests Yet
+
+        </h3>
+
+        <p>
+
+            You haven't applied for any leaves.
+
+        </p>
+
+        <br>
+
+        <a href="{{ url_for('leave.leavepage') }}"
+           class="btn btn-primary">
+
+            Apply for Your First Leave
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

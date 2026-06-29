@@ -1,5 +1,72 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
 
-{% endblock content %}
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Leave Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+
+            <div class="brand-mark"
+                 style="margin:auto;">
+                LM
+            </div>
+
+            <h1>
+
+                Leave Management System
+
+            </h1>
+
+            <p>
+
+                A simple portal to manage employee leave requests,
+                approvals, and balances.
+
+            </p>
+
+        </div>
+
+        {% if session.get("employee_id") %}
+            <a href="{{url_for(session.get('role').lower() + '.dashboard')}}"
+            class="btn btn-primary auth-submit">
+
+                Go to Dashboard
+
+            </a>
+
+        {% else %}
+
+        <a href="{{ url_for('auth.login') }}"
+           class="btn btn-primary auth-submit">
+
+            Login
+
+        </a>
+
+        <br><br>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

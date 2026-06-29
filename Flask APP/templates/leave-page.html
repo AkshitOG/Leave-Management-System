@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}
+Pending Leave Requests
+{% endblock %}
+
+
+{% block nav %}
+
+<a href="{{ url_for('hr.dashboard') }}"
+   class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('hr.all_pending_leaves') }}"
+   class="nav-item active">
+    Pending Requests
+</a>
+
+{% endblock %}
+
+
+{% block page_title %}
+Pending Leave Requests
+{% endblock %}
+
+
+{% block page_subtitle %}
+Review employee leave applications.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+
+    <div class="section-header">
+
+        <h2 class="section-title">
+
+            Pending Leave Requests
+
+        </h2>
+
+    </div>
+
+    {% if pending_leaves %}
+
+    <table class="table">
+
+        <thead>
+
+        <tr>
+
+            <th>Employee</th>
+
+            <th>Leave Type</th>
+
+            <th>Start</th>
+
+            <th>End</th>
+
+            <th>Reason</th>
+
+            <th>Status</th>
+
+            <th style="width:220px">
+                Action
+            </th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for leave in pending_leaves %}
+
+        <tr>
+
+            <td>
+
+                {{ leave.employee_id }}
+
+            </td>
+
+            <td>
+
+                {{ leave.leave_type }}
+
+            </td>
+
+            <td>
+
+                {{ leave.start_date }}
+
+            </td>
+
+            <td>
+
+                {{ leave.end_date }}
+
+            </td>
+
+            <td>
+
+                {{ leave.reason }}
+
+            </td>
+
+            <td>
+
+                <span class="badge badge-warning">
+
+                    Pending
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="actions">
+
+                    <a
+                        href="#"
+                        class="btn btn-primary">
+
+                        Approve
+
+                    </a>
+
+                    <a
+                        href="#"
+                        class="btn"
+                        style="background:#dc2626;color:white;">
+
+                        Reject
+
+                    </a>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <h3>
+
+            Nothing Pending 🎉
+
+        </h3>
+
+        <p>
+
+            Every leave request has already been processed.
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

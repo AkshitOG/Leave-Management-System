@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+Employee Dashboard
+{% endblock %}
+
+
+{% block nav %}
+
+<a href="{{ url_for('employee.dashboard') }}"
+   class="nav-item active">
+    Dashboard
+</a>
+
+<a href="{{ url_for('leave.leavepage') }}"
+   class="nav-item">
+    Apply Leave
+</a>
+
+<a href="{{ url_for('leave.history_page') }}"
+   class="nav-item">
+    Leave History
+</a>
+
+{% endblock %}
+
+
+{% block page_title %}
+Employee Dashboard
+{% endblock %}
+
+
+{% block page_subtitle %}
+Welcome back, {{ session.get("name") }}.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="grid grid-3">
+
+    <div class="stat-card">
+
+        <div class="stat-title">
+
+            Leave Balance
+
+        </div>
+
+        <div class="stat-value">
+
+            {{ stats.leave_balance }}
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-title">
+
+            Pending Requests
+
+        </div>
+
+        <div class="stat-value">
+
+            {{ stats.pending }}
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-title">
+
+            Approved Leaves
+
+        </div>
+
+        <div class="stat-value">
+
+            {{ stats.approved }}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2 class="section-title">
+
+            Quick Actions
+
+        </h2>
+
+    </div>
+
+    <div class="actions">
+
+        <a
+            href="{{ url_for('leave.leavepage') }}"
+            class="btn btn-primary">
+
+            Apply Leave
+
+        </a>
+
+        <a
+            href="{{ url_for('leave.history_page') }}"
+            class="btn btn-outline">
+
+            Leave History
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <div class="card">
+
+        <h3 class="card-title">
+
+            Welcome
+
+        </h3>
+
+        <p>
+
+            From here you can apply for leave,
+            track previous requests,
+            monitor approvals,
+            and cancel pending requests whenever necessary.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

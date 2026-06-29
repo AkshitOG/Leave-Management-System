@@ -1,10 +1,13 @@
 from database.connection import get_connection
 
-def execute_query(query:str, params:list = None):
+def execute_query(query:str, params:list|None = None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(query, params or [])
+    if params is not None:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
     rows_affected = cursor.rowcount
     conn.commit()
 
@@ -12,11 +15,14 @@ def execute_query(query:str, params:list = None):
     conn.close()
     return rows_affected
 
-def fetchone(query, params = None):
+def fetchone(query, params:list|None = None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(query, params or [])
+    if params is not None:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
     result = cursor.fetchone()
 
     cursor.close()
@@ -24,11 +30,13 @@ def fetchone(query, params = None):
 
     return result
 
-def fetchall(query, params=None):
+def fetchall(query, params:list|None=None):
     conn = get_connection()
     cursor = conn.cursor()
-
-    cursor.execute(query, params)
+    if params is not None:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
     result = cursor.fetchall()
 
     cursor.close()

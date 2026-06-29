@@ -10,10 +10,10 @@ auth_bp = Blueprint(
 @auth_bp.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        employeeid = request.form.get("employee_id")
+        email = request.form.get("email")
         password = request.form.get("password")
 
-        employee = AuthService.login(employeeid=employeeid, password=password)
+        employee = AuthService.login(email=email, password=password)
 
         if employee is None:
             flash("Invalid Credentials", "danger")

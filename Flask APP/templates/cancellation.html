@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+Cancel Leave Request
+{% endblock %}
+
+
+{% block nav %}
+
+<a href="{{ url_for('employee.dashboard') }}"
+   class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('leave.leavepage') }}"
+   class="nav-item">
+    Apply Leave
+</a>
+
+<a href="{{ url_for('leave.history_page') }}"
+   class="nav-item active">
+    Leave History
+</a>
+
+{% endblock %}
+
+
+{% block page_title %}
+Cancel Leave Request
+{% endblock %}
+
+
+{% block page_subtitle %}
+This action cannot be undone.
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card confirm-box">
+
+    <h2>
+
+        Cancel Leave Request?
+
+    </h2>
+
+    <p class="confirm-text">
+
+        You are about to cancel the following leave request.
+
+        <br><br>
+
+        <strong>Leave Type:</strong>
+        {{ leave.leave_type }}
+
+        <br>
+
+        <strong>Duration:</strong>
+
+        {{ leave.start_date }}
+        -
+
+        {{ leave.end_date }}
+
+        <br>
+
+        <strong>Status:</strong>
+
+        {{ leave.status }}
+
+        <br><br>
+
+        Once cancelled, this leave request will no longer be processed.
+
+    </p>
+
+    <form method="POST">
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="btn"
+                style="background:#dc2626;color:white;">
+
+                Yes, Cancel Leave
+
+            </button>
+
+            <a href="{{ url_for('leave.request_details',
+                                request_id=leave.request_id) }}"
+               class="btn btn-outline">
+
+                Go Back
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

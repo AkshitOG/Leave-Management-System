@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+Leave Balances
+{% endblock %}
+
+{% block nav %}
+
+<a href="{{ url_for('admin.dashboard') }}" class="nav-item">
+    Dashboard
+</a>
+
+<a href="{{ url_for('admin.employees') }}" class="nav-item">
+    Employees
+</a>
+
+<a href="{{ url_for('admin.create_employee') }}" class="nav-item">
+    Create Employee
+</a>
+
+<a href="{{ url_for('admin.balances') }}" class="nav-item active">
+    Leave Balances
+</a>
+
+{% endblock %}
+
+{% block page_title %}
+Leave Balances
+{% endblock %}
+
+{% block page_subtitle %}
+View employee leave balances.
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+<h2 class="card-title">
+
+Employee Leave Balances
+
+</h2>
+
+{% if employees %}
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Role</th>
+
+<th>Leave Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for employee in employees %}
+
+<tr>
+
+<td>{{ employee.employee_id }}</td>
+
+<td>{{ employee.name }}</td>
+
+<td>{{ employee.role }}</td>
+
+<td>
+
+<strong>
+
+{{ employee.leaves_balance }}
+
+</strong>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="empty-state">
+
+<h3>
+
+No Employees
+
+</h3>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block nav %}
+
+<a href="{{ url_for('admin.dashboard') }}" class="nav-item active">
+    Dashboard
+</a>
+
+<a href="{{ url_for('admin.employees') }}" class="nav-item">
+    Employees
+</a>
+
+<a href="{{ url_for('admin.create_employee') }}" class="nav-item">
+    Create Employee
+</a>
+
+<a href="{{ url_for('admin.balances') }}" class="nav-item">
+    Leave Balances
+</a>
+
+{% endblock %}
+
+{% block page_title %}
+Admin Dashboard
+{% endblock %}
+
+{% block page_subtitle %}
+Manage employees and monitor the Leave Management System.
+{% endblock %}
+
+{% block content %}
+
+<div class="grid grid-4">
+
+
+<div class="card">
+    <h3 class="card-title">Employees</h3>
+    <h2>{{ stats.total_employees }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">HR Staff</h3>
+    <h2>{{ stats.total_hr }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Pending Leaves</h3>
+    <h2>{{ stats.pending_leaves }}</h2>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Approved Leaves</h3>
+    <h2>{{ stats.approved_leaves }}</h2>
+</div>
+
+
+</div>
+
+<br>
+
+<div class="grid grid-3">
+
+
+<div class="card">
+
+    <h3 class="card-title">
+        Employee Management
+    </h3>
+
+    <p>
+        View, manage and maintain employee records.
+    </p>
+
+    <a href="{{ url_for('admin.employees') }}"
+       class="btn btn-primary">
+
+        View Employees
+
+    </a>
+
+</div>
+
+<div class="card">
+
+    <h3 class="card-title">
+        Create Employee
+    </h3>
+
+    <p>
+        Register a new employee, HR or Admin account.
+    </p>
+
+    <a href="{{ url_for('admin.create_employee') }}"
+       class="btn btn-primary">
+
+        Add Employee
+
+    </a>
+
+</div>
+
+<div class="card">
+
+    <h3 class="card-title">
+        Leave Balances
+    </h3>
+
+    <p>
+        Monitor leave balances across all employees.
+    </p>
+
+    <a href="{{ url_for('admin.balances') }}"
+       class="btn btn-outline">
+
+        View Balances
+
+    </a>
+
+</div>
+
+
+</div>
+
+{% endblock %}
