@@ -1,6 +1,7 @@
 from database.db_helper import *
 from models.leave_request import LeaveRequest
-from datetime import date 
+from datetime import date
+from services.email_service import MailNotifier as EmailService
 
 class LeaveService:
 
@@ -132,4 +133,102 @@ class LeaveService:
         execute_query(queries[1], [request_id, approved_by, comments, date.today()])
         return True
     
-    
+    @staticmethod
+    def approve_leave(request_id: int, hr_id: int):
+
+        leave = LeaveService.leave_details(request_id)
+
+        if leave is None:
+            return False
+
+        if leave.status != "PENDING":
+            return False
+
+        employee = fetchone("""
+            SELECT EMAIL, LEAVES_BALANCE
+            FROM Employees
+            WHERE EMPLOYEEID = ?
+        """, leave.employee_id)
+
+        if employee is None:
+            return False
+
+        leave_days = leave.total_days()
+
+        if employee.LEAVES_BALANCE < leave_days:
+            return False
+
+        execute_query("""
+            UPDATE LeaveRequests
+            SET STATUS = 'APPROVED'
+            WHERE REQUESTID = ?
+        """, request_id)
+
+        execute_query("""
+            UPDATE Employees
+            SET LEAVES_BALANCE = LEAVES_BALANCE - ?
+            WHERE EMPLOYEEID = ?
+        """, [leave_days, leave.employee_id])
+
+        execute_query("""
+            INSERT INTO Approvals
+            (
+                REQUESTID,
+                HRID,
+                DECISION,
+                DECISIONDATE
+            )
+            VALUES (?, ?, ?, GETDATE())
+        """, [request_id, hr_id, "APPROVED"])
+
+        EmailService.send_approve_mail(
+            employee.EMAIL,
+            request_id
+        )
+
+        return True
+
+
+    @staticmethod
+    def reject_leave(request_id: int, hr_id: int):
+
+        leave = LeaveService.leave_details(request_id)
+
+        if leave is None:
+            return False
+
+        if leave.status != "PENDING":
+            return False
+
+        employee = fetchone("""
+            SELECT EMAIL
+            FROM Employees
+            WHERE EMPLOYEEID = ?
+        """, leave.employee_id)
+
+        if employee is None:
+            return False
+
+        execute_query("""
+            UPDATE LeaveRequests
+            SET STATUS = 'REJECTED'
+            WHERE REQUESTID = ?
+        """, request_id)
+
+        execute_query("""
+            INSERT INTO Approvals
+            (
+                REQUESTID,
+                HRID,
+                DECISION,
+                DECISIONDATE
+            )
+            VALUES (?, ?, ?, GETDATE())
+        """, [request_id, hr_id, "REJECTED"])
+
+        EmailService.send_reject_mail(
+            employee.EMAIL,
+            request_id
+        )
+
+        return True

@@ -9,11 +9,11 @@ class MailNotifier:
         self.__sender = os.getenv("SENDER_MAIL")
         self.__password = os.getenv("SENDER_APP_PASSWORD")
 
-    def _send_mail(self, reciever:str, subject:str, body:str):
+    def _send_mail(self, receiver:str, subject:str, body:str):
         try:
             message = EmailMessage()
             message["From"] = self.__sender
-            message["To"] = reciever
+            message["To"] = receiver
             message["Subject"] = subject
             message.set_content(body)
             
@@ -30,7 +30,7 @@ class MailNotifier:
 
 
 class EmailService:
-    _mailer = MailNotifier()
+    _notifier = MailNotifier()
 
     @staticmethod
     def send_approve_mail(email:str, request_id:int):
@@ -50,7 +50,7 @@ Regards,
 HR Department
 Leave Management System
 """
-        EmailService._mailer._send_mail(reciever=email, subject=subject, body=approval_message)
+        EmailService._notifier._send_mail(receiver=email, subject=subject, body=approval_message)
 
     @staticmethod
     def send_reject_mail(email:str, request_id:int):
@@ -71,5 +71,5 @@ HR Department
 Leave Management System
 """
         
-        EmailService._mailer._send_mail(reciever=email, subject=subject, body=rejection_message)
+        EmailService._notifier._send_mail(receiver=email, subject=subject, body=rejection_message)
 

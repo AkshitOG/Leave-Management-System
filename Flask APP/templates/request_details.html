@@ -152,4 +152,32 @@ Request #{{ leave_details.request_id }}
 
 </div>
 
+{% if leave.status == "PENDING" %}
+
+<div class="button-group">
+
+    <form method="POST"
+          action="{{ url_for('hr.approve_leave',
+                             request_id=leave.request_id) }}">
+
+        <button class="btn btn-success">
+            Approve
+        </button>
+
+    </form>
+
+    <form method="POST"
+          action="{{ url_for('hr.reject_leave',
+                             request_id=leave.request_id) }}">
+
+        <button class="btn btn-danger">
+            Reject
+        </button>
+
+    </form>
+
+</div>
+
+{% endif %}
+
 {% endblock %}
