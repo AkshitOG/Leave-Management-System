@@ -120,28 +120,15 @@ Review employee leave applications.
 
             <td>
 
-                <div class="actions">
+    <a href="{{ url_for('hr.leave_details',
+                        request_id=leave.request_id) }}"
+       class="btn btn-primary">
 
-                    <a
-                        href="#"
-                        class="btn btn-primary">
+        Review
 
-                        Approve
+    </a>
 
-                    </a>
-
-                    <a
-                        href="#"
-                        class="btn"
-                        style="background:#dc2626;color:white;">
-
-                        Reject
-
-                    </a>
-
-                </div>
-
-            </td>
+</td>
 
         </tr>
 

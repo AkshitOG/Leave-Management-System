@@ -28,8 +28,18 @@ def login():
         if next_url:
             return redirect(next_url)
         
-        flash("Login Successfull")
-        return redirect("/")
+        flash("Login Successful", "success")
+
+        role = employee.Role.upper()
+
+        if role == "ADMIN":
+            return redirect(url_for("admin.dashboard"))
+
+        elif role == "HR":
+            return redirect(url_for("hr.dashboard"))
+
+        else:
+            return redirect(url_for("employee.dashboard"))
 
     return render_template("login.html")
 

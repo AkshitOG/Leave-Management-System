@@ -86,16 +86,12 @@ Manage employee leave requests.
     <div class="section-header">
 
         <h2 class="section-title">
-
             Latest Pending Requests
-
         </h2>
 
         <a href="{{ url_for('hr.all_pending_leaves') }}"
            class="btn btn-primary">
-
             View All
-
         </a>
 
     </div>
@@ -112,14 +108,11 @@ Manage employee leave requests.
             <tr>
 
                 <th>Employee</th>
-
                 <th>Leave Type</th>
-
                 <th>Start</th>
-
                 <th>End</th>
-
                 <th>Status</th>
+                <th>Action</th>
 
             </tr>
 
@@ -142,10 +135,20 @@ Manage employee leave requests.
                 <td>
 
                     <span class="badge badge-warning">
-
                         Pending
-
                     </span>
+
+                </td>
+
+                <td>
+
+                    <a href="{{ url_for('hr.leave_details',
+                                        request_id=leave.request_id) }}"
+                       class="btn btn-outline">
+
+                        Review
+
+                    </a>
 
                 </td>
 
@@ -161,16 +164,10 @@ Manage employee leave requests.
 
         <div class="empty-state">
 
-            <h3>
-
-                No Pending Requests
-
-            </h3>
+            <h3>No Pending Requests</h3>
 
             <p>
-
                 There are currently no leave requests awaiting approval.
-
             </p>
 
         </div>

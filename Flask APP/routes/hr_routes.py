@@ -13,10 +13,10 @@ from decorators.role_required import role_req
 from services.leave_service import LeaveService
 from services.dashboard_service import DashboardService
 
-
 hr_bp = Blueprint(
     "hr",
     __name__,
+    url_prefix="/hr"
 )
 
 
@@ -26,9 +26,7 @@ hr_bp = Blueprint(
 def dashboard():
 
     pending_leaves = LeaveService.get_pending(limit=5)
-    stats = DashboardService.get_leave_stats(
-        session.get("employee_id")
-    )
+    stats = DashboardService.get_leave_stats(session.get("employee_id"))
 
     return render_template(
         "hr_dashboard.html",
@@ -72,12 +70,19 @@ def leave_details(request_id):
 @role_req("HR")
 def approve_leave(request_id):
 
-    hr_id = session.get("employee_id")
+    try:
+        hr_id = session["employee_id"]
 
-    if LeaveService.approve_leave(request_id, hr_id):
-        flash("Leave approved successfully.", "success")
-    else:
-        flash("Unable to approve leave.", "danger")
+        result = LeaveService.approve_leave(request_id, hr_id)
+
+        if result:
+            flash("Leave approved successfully.", "success")
+        else:
+            flash("Unable to approve leave.", "danger")
+
+    except Exception as e:
+        print(e)
+        flash(f"Error: {e}", "danger")
 
     return redirect(url_for("hr.all_pending_leaves"))
 
@@ -87,11 +92,18 @@ def approve_leave(request_id):
 @role_req("HR")
 def reject_leave(request_id):
 
-    hr_id = session.get("employee_id")
+    try:
+        hr_id = session["employee_id"]
 
-    if LeaveService.reject_leave(request_id, hr_id):
-        flash("Leave rejected successfully.", "success")
-    else:
-        flash("Unable to reject leave.", "danger")
+        result = LeaveService.reject_leave(request_id, hr_id)
+
+        if result:
+            flash("Leave rejected successfully.", "success")
+        else:
+            flash("Unable to reject leave.", "danger")
+
+    except Exception as e:
+        print(e)
+        flash(f"Error: {e}", "danger")
 
     return redirect(url_for("hr.all_pending_leaves"))

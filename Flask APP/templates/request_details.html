@@ -40,9 +40,7 @@ Request #{{ leave_details.request_id }}
 <div class="card">
 
     <h3 class="card-title">
-
         Request Information
-
     </h3>
 
     <table class="table">
@@ -50,41 +48,27 @@ Request #{{ leave_details.request_id }}
         <tbody>
 
         <tr>
-
             <th>Leave Type</th>
-
             <td>{{ leave_details.leave_type }}</td>
-
         </tr>
 
         <tr>
-
             <th>Start Date</th>
-
             <td>{{ leave_details.start_date }}</td>
-
         </tr>
 
         <tr>
-
             <th>End Date</th>
-
             <td>{{ leave_details.end_date }}</td>
-
         </tr>
 
         <tr>
-
             <th>Reason</th>
-
             <td>{{ leave_details.reason }}</td>
-
         </tr>
 
         <tr>
-
             <th>Status</th>
-
             <td>
 
                 {% if leave_details.status == "APPROVED" %}
@@ -105,6 +89,12 @@ Request #{{ leave_details.request_id }}
                         Rejected
                     </span>
 
+                {% elif leave_details.status == "CANCELLED" %}
+
+                    <span class="badge">
+                        Cancelled
+                    </span>
+
                 {% else %}
 
                     <span class="badge">
@@ -114,7 +104,6 @@ Request #{{ leave_details.request_id }}
                 {% endif %}
 
             </td>
-
         </tr>
 
         </tbody>
@@ -135,7 +124,7 @@ Request #{{ leave_details.request_id }}
 
         </a>
 
-        {% if leave_details.status == "Pending" %}
+        {% if leave_details.status == "PENDING" %}
 
         <a href="{{ url_for('leave.cancel_leave',
                             request_id=leave_details.request_id) }}"
@@ -151,33 +140,5 @@ Request #{{ leave_details.request_id }}
     </div>
 
 </div>
-
-{% if leave.status == "PENDING" %}
-
-<div class="button-group">
-
-    <form method="POST"
-          action="{{ url_for('hr.approve_leave',
-                             request_id=leave.request_id) }}">
-
-        <button class="btn btn-success">
-            Approve
-        </button>
-
-    </form>
-
-    <form method="POST"
-          action="{{ url_for('hr.reject_leave',
-                             request_id=leave.request_id) }}">
-
-        <button class="btn btn-danger">
-            Reject
-        </button>
-
-    </form>
-
-</div>
-
-{% endif %}
 
 {% endblock %}

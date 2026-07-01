@@ -38,3 +38,6 @@ class LeaveRequest:
     
     def can_cancel(self):
         return self.is_pending()
+    
+    def total_days(self):
+        return (self.end_date - self.start_date).days + 1

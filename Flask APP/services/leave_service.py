@@ -1,138 +1,111 @@
+from datetime import date
+
 from database.db_helper import *
 from models.leave_request import LeaveRequest
-from datetime import date
-from services.email_service import MailNotifier as EmailService
+from services.email_service import EmailService
+
 
 class LeaveService:
 
     @staticmethod
-    def createleave(leaverequestobject:LeaveRequest):
-        query = """INSERT INTO LeaveRequests (EMPLOYEEID, LEAVETYPE, STARTDATE, ENDDATE, REASON)
-        VALUES (?,?, ?, ?, ?)"""
+    def createleave(leaverequestobject: LeaveRequest):
+        query = """
+        INSERT INTO LeaveRequests
+        (EMPLOYEEID, LEAVETYPE, STARTDATE, ENDDATE, REASON)
+        VALUES (?, ?, ?, ?, ?)
+        """
 
-        rows = execute_query(query,
-                      [leaverequestobject.employee_id,
-                        leaverequestobject.leave_type,
-                        leaverequestobject.start_date,
-                        leaverequestobject.end_date,
-                        leaverequestobject.reason]
-                    )
-        
+        rows = execute_query(
+            query,
+            [
+                leaverequestobject.employee_id,
+                leaverequestobject.leave_type,
+                leaverequestobject.start_date,
+                leaverequestobject.end_date,
+                leaverequestobject.reason,
+            ],
+        )
+
         return rows > 0
-    
+
     @staticmethod
-    def get_leaves_by_employee_id(employee_id:int):
-        query = """SELECT *
+    def get_leaves_by_employee_id(employee_id: int):
+        query = """
+        SELECT *
         FROM LeaveRequests
-        WHERE EMPLOYEEID = ?"""
+        WHERE EMPLOYEEID = ?
+        ORDER BY CREATIONDATE DESC
+        """
 
-        leaves_rows = fetchall(query, employee_id)
+        rows = fetchall(query, employee_id)
 
-        return [LeaveRequest.from_row(row) for row in leaves_rows]
-    
+        return [LeaveRequest.from_row(row) for row in rows]
+
     @staticmethod
-    def leave_details(request_id:int):
-        query = """SELECT *
+    def leave_details(request_id: int):
+        query = """
+        SELECT *
         FROM LeaveRequests
-        WHERE REQUESTID = ?"""
+        WHERE REQUESTID = ?
+        """
 
-        Leave_request = fetchone(query,request_id)
-        if Leave_request is None:
+        row = fetchone(query, request_id)
+
+        if row is None:
             return None
 
-        return LeaveRequest.from_row(Leave_request)
-    
-    @staticmethod
-    def cancel_leave(request_id:int):
-        leave = LeaveService.leave_details(request_id=request_id)
-        if leave.can_cancel():
-            query = """UPDATE LeaveRequests
-            SET STATUS = ?
-            WHERE REQUESTID = ?"""
+        return LeaveRequest.from_row(row)
 
-            execute_query(query, ["Cancelled", request_id])
-            return True
-        
-        return False
-    
     @staticmethod
-    def get_pending(limit:int | None = None):
+    def cancel_leave(request_id: int):
+
+        leave = LeaveService.leave_details(request_id)
+
+        if leave is None:
+            return False
+
+        if not leave.can_cancel():
+            return False
+
+        execute_query(
+            """
+            UPDATE LeaveRequests
+            SET STATUS='CANCELLED'
+            WHERE REQUESTID=?
+            """,
+            request_id,
+        )
+
+        return True
+
+    @staticmethod
+    def get_pending(limit=None):
+
         if limit is not None:
-            query = """SELECT TOP(?) *
+
+            query = """
+            SELECT TOP(?)
+            *
             FROM LeaveRequests
-            WHERE STATUS = ?
+            WHERE STATUS='PENDING'
             ORDER BY CREATIONDATE DESC
             """
-            pending_leaves_rows = fetchall(query, limit, "PENDING")
+
+            rows = fetchall(query, [limit])
+
         else:
-            query = """SELECT *
+
+            query = """
+            SELECT *
             FROM LeaveRequests
-            WHERE STATUS = ?
+            WHERE STATUS='PENDING'
             ORDER BY CREATIONDATE DESC
             """
-            pending_leaves_rows = fetchall(query, "PENDING")
 
-        return [LeaveRequest.from_row(pending_leave_req) for pending_leave_req in pending_leaves_rows]
-    
-    @staticmethod
-    def approve_leave(request_id:int, employee_id:int, approved_by:int, comments:str, ):
-        leave = LeaveService.leave_details(request_id)
-        if leave.status != "Pending":
-            return False
-        
-        queries = ["""UPDATE LeaveRequests
-        SET STATUS = 'APPROVED'
-        WHERE REQUESTID = ?""",
+            rows = fetchall(query)
 
-        """UPDATE Employees
-        SET LEAVES_BALANCE = LEAVES_BALANCE - ?
-        WHERE EMPLOYEEID = ?""",
-        
-        """INSERT INTO Approvals
-        (REQUESTID,
-        APPROVEDBY,
-        DECISION,
-        COMMENTS,
-        APPROVALDATE)
-        VALUES (?,?,'Approved',?,?)"""]
+        return [LeaveRequest.from_row(row) for row in rows]
 
-        dates = fetchone("""SELECT STARTDATE, ENDDATE
-                              FROM LeaveRequests
-                              WHERE REQUESTID = ?""", request_id)
-        if dates is None:
-            return False
-        
-        start_date = dates.STARTDATE
-        end_date = dates.ENDDATE
-        total_days = (end_date - start_date).days + 1
-
-        execute_query(queries[0], request_id)
-        execute_query(queries[1], [total_days, employee_id])
-        execute_query(queries[2], [request_id, approved_by, comments, date.today()])
-        return True
-
-    @staticmethod
-    def reject_leave(request_id:int, approved_by:int, comments:str):
-        leave = LeaveService.leave_details(request_id)
-        if leave.status != "Pending":
-            return False
-        
-        queries = ["""UPDATE LeaveRequests
-        SET STATUS = 'REJECTED'
-        WHERE REQUESTID = ?""",
-        
-        """INSERT INTO Approvals
-        (REQUESTID,
-        APPROVEDBY,
-        DECISION,
-        COMMENTS,
-        APPROVALDATE)
-        VALUES (?,?,'Rejected',?,?)"""]
-
-        execute_query(queries[0], request_id)
-        execute_query(queries[1], [request_id, approved_by, comments, date.today()])
-        return True
-    
     @staticmethod
     def approve_leave(request_id: int, hr_id: int):
 
@@ -141,53 +114,73 @@ class LeaveService:
         if leave is None:
             return False
 
-        if leave.status != "PENDING":
+        if leave.status.strip().upper() != "PENDING":
             return False
 
-        employee = fetchone("""
+        employee = fetchone(
+            """
             SELECT EMAIL, LEAVES_BALANCE
             FROM Employees
             WHERE EMPLOYEEID = ?
-        """, leave.employee_id)
+            """,
+            leave.employee_id,
+        )
 
         if employee is None:
             return False
 
-        leave_days = leave.total_days()
+        leave_days = (leave.end_date - leave.start_date).days + 1
 
         if employee.LEAVES_BALANCE < leave_days:
             return False
 
-        execute_query("""
+        execute_query(
+            """
             UPDATE LeaveRequests
-            SET STATUS = 'APPROVED'
-            WHERE REQUESTID = ?
-        """, request_id)
+            SET STATUS='APPROVED'
+            WHERE REQUESTID=?
+            """,
+            request_id,
+        )
 
-        execute_query("""
+        execute_query(
+            """
             UPDATE Employees
             SET LEAVES_BALANCE = LEAVES_BALANCE - ?
             WHERE EMPLOYEEID = ?
-        """, [leave_days, leave.employee_id])
+            """,
+            [leave_days, leave.employee_id],
+        )
 
-        execute_query("""
+        execute_query(
+            """
             INSERT INTO Approvals
             (
                 REQUESTID,
-                HRID,
+                APPROVEDBY,
                 DECISION,
-                DECISIONDATE
+                COMMENTS,
+                APPROVALDATE
             )
-            VALUES (?, ?, ?, GETDATE())
-        """, [request_id, hr_id, "APPROVED"])
-
-        EmailService.send_approve_mail(
-            employee.EMAIL,
-            request_id
+            VALUES (?, ?, ?, ?, GETDATE())
+            """,
+            [
+                request_id,
+                hr_id,
+                "APPROVED",
+                "Approved by HR",
+            ],
         )
 
-        return True
+        try:
+            EmailService.send_approve_mail(
+                employee.EMAIL,
+                request_id,
+            )
+        except Exception as e:
+            print("Mail Error:", e)
 
+        return True
 
     @staticmethod
     def reject_leave(request_id: int, hr_id: int):
@@ -197,38 +190,56 @@ class LeaveService:
         if leave is None:
             return False
 
-        if leave.status != "PENDING":
+        if leave.status.strip().upper() != "PENDING":
             return False
 
-        employee = fetchone("""
+        employee = fetchone(
+            """
             SELECT EMAIL
             FROM Employees
             WHERE EMPLOYEEID = ?
-        """, leave.employee_id)
+            """,
+            leave.employee_id,
+        )
 
         if employee is None:
             return False
 
-        execute_query("""
+        execute_query(
+            """
             UPDATE LeaveRequests
-            SET STATUS = 'REJECTED'
-            WHERE REQUESTID = ?
-        """, request_id)
+            SET STATUS='REJECTED'
+            WHERE REQUESTID=?
+            """,
+            request_id,
+        )
 
-        execute_query("""
+        execute_query(
+            """
             INSERT INTO Approvals
             (
                 REQUESTID,
-                HRID,
+                APPROVEDBY,
                 DECISION,
-                DECISIONDATE
+                COMMENTS,
+                APPROVALDATE
             )
-            VALUES (?, ?, ?, GETDATE())
-        """, [request_id, hr_id, "REJECTED"])
-
-        EmailService.send_reject_mail(
-            employee.EMAIL,
-            request_id
+            VALUES (?, ?, ?, ?, GETDATE())
+            """,
+            [
+                request_id,
+                hr_id,
+                "REJECTED",
+                "Rejected by HR",
+            ],
         )
+
+        try:
+            EmailService.send_reject_mail(
+                employee.EMAIL,
+                request_id,
+            )
+        except Exception as e:
+            print("Mail Error:", e)
 
         return True
